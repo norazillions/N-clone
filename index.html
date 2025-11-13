@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome | TMDB Explorer Clone</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #0b0b0b, #1e1e1e);
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2em;
+      color: #ccc;
+      max-width: 600px;
+      margin: 10px auto 30px;
+      line-height: 1.5;
+    }
+
+    .features {
+      margin-bottom: 30px;
+    }
+
+    .features span {
+      display: inline-block;
+      background: #e50914;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 20px;
+      margin: 5px;
+      font-size: 0.9em;
+      transition: background 0.3s;
+    }
+
+    .features span:hover {
+      background: #b00610;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #e50914;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2em;
+      text-decoration: none;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #b00610;
+      transform: scale(1.05);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.8em;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 Welcome to N-clone</h1>
+  <p>Discover movies by genre, explore trending films, and search through thousands of titles using The Movie Database API.</p>
+
+  <div class="features">
+    <span>Browse by Genre</span>
+    <span>Top Rated</span>
+    <span>Trending Now</span>
+    <span>Search Instantly</span>
+  </div>
+
+  <a href="home.html" class="btn">🚀 Get Started</a>
+
+  <footer>Built with ❤ using TMDB API</footer>
+</body>
+</html>
+

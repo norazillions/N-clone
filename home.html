@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMDB Movie Explorer</title>
+  <style>
+    body {
+      background-color: #0b0b0b;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    h2 {
+      margin: 20px 30px 10px;
+      font-size: 22px;
+      color: #f5f5f5;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+
+    .search-bar input {
+      width: 60%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px 0 0 5px;
+      outline: none;
+    }
+
+    .search-bar button {
+      padding: 10px 20px;
+      background-color: #e50914;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .search-bar button:hover {
+      background-color: #b00610;
+    }
+    .movie-row {
+      display: flex;
+      overflow-x: auto;
+      padding: 10px 30px;
+      gap: 15px;
+      scroll-behavior: smooth;
+    }
+
+    .movie-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .movie-card {
+      flex: 0 0 auto;
+      width: 150px;
+      background: #1e1e1e;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.08);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 225px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .movie-card h3 {
+      font-size: 14px;
+      margin: 8px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .movie-card p {
+      font-size: 12px;
+      margin: 0 8px 10px;
+      text-align: center;
+      color: #bbb;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1> Movie Explorer</h1>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search for a movie...">
+    <button onclick="searchMovies()">Search</button>
+  </div>
+
+  <!-- 🔎 Search Results -->
+  <div class="section" id="searchSection" style="display: none;">
+    <div id="searchResults" class="movie-row"></div>
+  </div>
+
+  <div class="section">
+    <h2>🔥 Popular Movies</h2>
+    <div id="popular" class="movie-row"></div>
+  </div>
+
+  <div class="section">
+    <h2>⭐ Top Rated</h2>
+    <div id="topRated" class="movie-row"></div>
+  </div>
+
+  <div class="section">
+    <h2>📈 Trending This Week</h2>
+    <div id="trending" class="movie-row"></div>
+  </div>
+
+  <div class="section">
+    <h2>🎟 Upcoming Releases</h2>
+    <div id="upcoming" class="movie-row"></div>
+  </div>
+  <script src="config.js"></script>
+
+  <script>
+    const IMG_BASE_URL = "https://image.tmdb.org/t/p/w500";
+
+    async function fetchMovies(url, containerId) {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        displayMovies(data.results, containerId);
+      } catch (error) {
+        console.error(`Error fetching movies for ${containerId}:, error`);
+      }
+    }
+
+    function displayMovies(movies, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) {
+        console.error(`No element found with id "${containerId}"`);
+        return;
+      }
+
+      container.innerHTML = "";
+
+      movies.forEach(movie => {
+        const movieDiv = document.createElement("div");
+        movieDiv.classList.add("movie-card");
+
+        const poster = movie.poster_path
+          ? `${IMG_BASE_URL}${movie.poster_path}`
+          : "https://via.placeholder.com/150x225?text=No+Image";
+
+        movieDiv.innerHTML = `
+          <img src="${poster}" alt="${movie.title}">
+          <h3>${movie.title}</h3>
+          <p>⭐ ${movie.vote_average || "N/A"}</p>
+        `;
+
+        container.appendChild(movieDiv);
+      });
+    }
+    function loadAllMovies() {
+      fetchMovies(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`, "popular");
+      fetchMovies(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`, "topRated");
+      fetchMovies(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`, "trending");
+      fetchMovies(`https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`, "upcoming");
+    }
+    async function searchMovies() {
+      const query = document.getElementById("searchInput").value.trim();
+      const searchSection = document.getElementById("searchSection");
+
+      if (query === "") {
+        searchSection.style.display = "none";
+        return;
+      }
+
+      const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      searchSection.style.display = "block";
+      displayMovies(data.results, "searchResults");
+    }
+    // Ensure DOM is ready before running
+    document.addEventListener("DOMContentLoaded", loadAllMovies);
+  </script>
+</body>
+</html>
